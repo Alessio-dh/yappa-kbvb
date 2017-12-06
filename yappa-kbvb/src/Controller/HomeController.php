@@ -26,6 +26,8 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
+        $session = new Session();
+        $session->start();
         $memberEntry = new MemberEntry();
         $form = $this->createFormBuilder($memberEntry)
             ->add('day', IntegerType::class,array('label'=>'Dag',
@@ -72,6 +74,8 @@ class HomeController extends Controller
 
                 $em->persist($memberEntry);
                 $em->flush();
+
+                $session->set('stepsDone', 1);
                 return $this->redirectToRoute('keuze',array('id'=>$memberEntry->getId()));
             }else{
                 throw new \Exception('Not a member of the red devils fanclub');
@@ -88,6 +92,7 @@ class HomeController extends Controller
      * @Route("/keuze/{id}",name="keuze")
      */
     public function itemSelect(Request $request,$id = null){
+        $session = new Session();
         if($id == null){
             return $this->redirectToRoute('home');
         }
@@ -112,6 +117,7 @@ class HomeController extends Controller
                 $memberEntry->setItem((int)$betweenvar['item']->getId());
                 $em->persist($memberEntry);
                 $em->flush();
+                $session->set('stepsDone',$session->get('stepsDone')+1);
                 return $this->redirectToRoute('proficiat');
             }
         }
@@ -126,7 +132,13 @@ class HomeController extends Controller
      * @Route("/proficiat",name="proficiat")
      */
     public function showCongratulationsScreen(){
-        return $this->render('Layouts/Main_Layout.html.twig',array('done'=>true));
+        $session = new Session();
+        if($session->get('stepsDone') === 2){
+            $session->remove('stepsDone');
+            return $this->render('Layouts/Main_Layout.html.twig',array('done'=>true));
+        }else{
+            return $this->redirectToRoute('home');
+        }
     }
 
     private function isMember($memberId){
