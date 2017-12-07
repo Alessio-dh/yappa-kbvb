@@ -32,23 +32,26 @@ class HomeController extends Controller
         $form = $this->createFormBuilder($memberEntry)
             ->add('day', IntegerType::class,array('label'=>'Dag',
                 'attr'=> array(
-                    'class' => 'form-control',
+                    'class' => 'form-control form-inline',
                     'min' => 1,
-                    'max' => 31
+                    'max' => 31,
+                    'placeholder'=>'Dag'
                 )
             ))
             ->add('month', IntegerType::class,array('label'=>'Maand',
                 'attr'=> array(
-                    'class' => 'form-control',
+                    'class' => 'form-control form-inline',
                     'min' => 1,
-                    'max' => 12
+                    'max' => 12,
+                    'placeholder'=>'Maand'
                 )
             ))
             ->add('year', IntegerType::class,array('label'=>'Jaar',
                 'attr'=> array(
-                    'class' => 'form-control',
+                    'class' => 'form-control form-inline',
                     'min' => 1900,
-                    'max' => date("Y")
+                    'max' => date("Y"),
+                    'placeholder'=>'Jaar'
                 )
             ))
             ->add('member_id', IntegerType::class,array('label'=>'Lidnummer',
@@ -56,7 +59,7 @@ class HomeController extends Controller
                     'class' => 'form-control',
                 )
             ))
-            ->add('save', SubmitType::class, array('label' => 'Volgende','attr'=>array('class'=>'btn btn-primary')))
+            ->add('save', SubmitType::class, array('label' => 'Volgende','attr'=>array('class'=>'pulseBtn')))
             ->getForm();
 
         $form->handleRequest($request);
@@ -84,7 +87,7 @@ class HomeController extends Controller
 
         return $this->render('Layouts/Main_Layout.html.twig',array(
             'form' => $form->createView(),
-            'done' => false
+            'templateName' => 'main_page'
         ));
     }
 
@@ -104,7 +107,7 @@ class HomeController extends Controller
                 'class'  => Items::class,
                 'choices' =>$items
             ))
-            ->add('save', SubmitType::class, array('label' => 'Verzenden','attr'=>array('class'=>'btn btn-primary')))
+            ->add('save', SubmitType::class, array('label' => 'Verzenden','attr'=>array('class'=>'pulseBtn')))
             ->getForm();
 
         $form->handleRequest($request);
@@ -124,7 +127,7 @@ class HomeController extends Controller
 
         return $this->render('Layouts/Main_Layout.html.twig',array(
             'form' => $form->createView(),
-            'done' => false
+            'templateName' => 'item_select'
         ));
     }
 
@@ -135,7 +138,7 @@ class HomeController extends Controller
         $session = new Session();
         if($session->get('stepsDone') === 2){
             $session->remove('stepsDone');
-            return $this->render('Layouts/Main_Layout.html.twig',array('done'=>true));
+            return $this->render('Layouts/Main_Layout.html.twig',array('templateName'=>'congratulations'));
         }else{
             return $this->redirectToRoute('home');
         }

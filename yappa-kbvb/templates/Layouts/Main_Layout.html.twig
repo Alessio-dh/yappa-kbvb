@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Yappa KBVB</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('/assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/styles.min.css') }}">
 </head>
-<body>
+<body style="background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ),url('{{ asset('/assets/img/bg7.jpg') }}');background-repeat:no-repeat;background-size:cover;min-height:100vh;">
     <div class="container">
         <div class="row">
-            {% if done %}
-                {% include 'User/congratulations.html.twig' %}
-            {% else %}
-                {% include 'User/main_page.html.twig' %}
-            {% endif %}
+            <div class="article-list" style="background-color: transparent;min-height:120px;">
+                <div class="container">
+                    <div class="intro" style="margin:0px;margin-right:0px;max-width:600px;">
+                        <img src="{{ asset('/assets/img/Belgium_urbsfa.png') }}" style="border-style:none;min-width:120px;display:inline-block;background-position:left;background-repeat:no-repeat;height:120px;z-index:99;">
+                        <h2 class="text-left" style="display:inline-block;font-size:20px;color:rgb(255,255,255);font-weight:bold;font-style:normal;">Koninklijke Belgische Voetbalbond</h2>
+                    </div>
 
+                    {% include 'User/'~templateName~'.html.twig' %}
+
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 </html>
