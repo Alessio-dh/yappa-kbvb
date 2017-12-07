@@ -78,6 +78,7 @@ class HomeController extends Controller
                 $em->flush();
 
                 $session->set('stepsDone', 1);
+                $session->set('checkForRedirecting', $memberEntry->getId());
                 return $this->redirectToRoute('keuze',array('id'=>$memberEntry->getId()));
             }else{
                 throw new \Exception('Not a member of the red devils fanclub');
@@ -96,6 +97,12 @@ class HomeController extends Controller
     public function itemSelect(Request $request,$id = null){
         $session = new Session();
         if($id == null){
+            return $this->redirectToRoute('home');
+        }
+
+        if(!$session->has('checkForRedirecting')){
+            return $this->redirectToRoute('home');
+        }elseif ($session->get('checkForRedirecting') != $id){
             return $this->redirectToRoute('home');
         }
 
@@ -137,6 +144,7 @@ class HomeController extends Controller
         $session = new Session();
         if($session->get('stepsDone') === 2){
             $session->remove('stepsDone');
+            $session->remove('checkForRedirecting');
             return $this->render('Layouts/Main_Layout.html.twig',array('templateName'=>'congratulations'));
         }else{
             return $this->redirectToRoute('home');
