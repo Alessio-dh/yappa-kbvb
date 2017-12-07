@@ -66,10 +66,9 @@ class HomeController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $memberEntry = $form->getData();
-            if($this->isMember($memberEntry->getMemberId())){
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s',$memberEntry->getYear().'-'.$memberEntry->getMonth().'-'.$memberEntry->getDay().' 00:00:00');
+            if($this->isMember($memberEntry->getMemberId(),$date)){
                 $em = $this->getDoctrine()->getManager();
-
-                $date = \DateTime::createFromFormat('Y-m-d H:i:s',$memberEntry->getYear().'-'.$memberEntry->getMonth().'-'.$memberEntry->getDay().' 00:00:00');
                 $dateEntered = new \DateTime();
 
                 $memberEntry->setBirthDate($date);
@@ -144,10 +143,10 @@ class HomeController extends Controller
         }
     }
 
-    private function isMember($memberId){
+    private function isMember($memberId,$birthDate){
         $member =  $this->getDoctrine()
             ->getRepository(Members::class)
-            ->findOneBy(array('id_membership' => $memberId));
+            ->findOneBy(array('id_membership' => $memberId,'birthdate'=>$birthDate));
         if($member != null ){
             return true;
         }else{
