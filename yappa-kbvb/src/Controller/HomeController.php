@@ -69,18 +69,22 @@ class HomeController extends Controller
             $memberEntry = $form->getData();
             $date = \DateTime::createFromFormat('Y-m-d H:i:s',$memberEntry->getYear().'-'.$memberEntry->getMonth().'-'.$memberEntry->getDay().' 00:00:00');
             if($this->isMember($memberEntry->getMemberId(),$date)){
-                $em = $this->getDoctrine()->getManager();
-                $dateEntered = new \DateTime();
+                if($this->alreadyEntered($memberEntry->getMemberId(),$date)){
+                    $form->addError(new FormError('Je hebt al een keuze gemaakt'));
+                }else{
+                    $em = $this->getDoctrine()->getManager();
+                    $dateEntered = new \DateTime();
 
-                $memberEntry->setBirthDate($date);
-                $memberEntry->setEnteredAt($dateEntered);
+                    $memberEntry->setBirthDate($date);
+                    $memberEntry->setEnteredAt($dateEntered);
 
-                $em->persist($memberEntry);
-                $em->flush();
+                    $em->persist($memberEntry);
+                    $em->flush();
 
-                $session->set('stepsDone', 1);
-                $session->set('checkForRedirecting', $memberEntry->getId());
-                return $this->redirectToRoute('keuze',array('id'=>$memberEntry->getId()));
+                    $session->set('stepsDone', 1);
+                    $session->set('checkForRedirecting', $memberEntry->getId());
+                    return $this->redirectToRoute('keuze',array('id'=>$memberEntry->getId()));
+                }
             }else{
                 $form->addError(new FormError('De combinatie is niet gevonden in ons systeem, Probeer opnieuw'));
             }
@@ -156,6 +160,17 @@ class HomeController extends Controller
         $member =  $this->getDoctrine()
             ->getRepository(Members::class)
             ->findOneBy(array('id_membership' => $memberId,'birthdate'=>$birthDate));
+        if($member != null ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private function alreadyEntered($memberId,$birthDate){
+        $member =  $this->getDoctrine()
+            ->getRepository(MemberEntry::class)
+            ->findOneBy(array('member_id' => $memberId,'birthdate'=>$birthDate,'item'=>[1,2,3,4]));
         if($member != null ){
             return true;
         }else{
