@@ -26,3 +26,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    console_command.csv_import:
+      class: App\Command\CsvImport
+      arguments:
+        - "@doctrine.orm.entity_manager"
+      tags:
+        - {name: console.command}

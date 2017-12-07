@@ -16,24 +16,52 @@ use Doctrine\ORM\Mapping as ORM;
 class Members
 {
     /**
-     * @var integer $id
-     *
      * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
     /**
-     * @var string $id_membership
-     *
-     * @ORM\Column(name="id_membership")
+     * @ORM\Column(name="id_membership",type="integer")
      */
     protected $id_membership;
 
     /**
-     * @var string $birthdate
-     *
      * @ORM\Column(name="birthdate",type="datetime")
      */
     protected $birthdate;
+
+    /**
+     * @return string
+     */
+    public function getIdMembership()
+    {
+        return $this->id_membership;
+    }
+
+    /**
+     * @param string $id_membership
+     */
+    public function setIdMembership($id_membership)
+    {
+        $this->id_membership = $id_membership;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBirthdate()
+    {
+        return $this->birthdate;
+    }
+
+    /**
+     * @param string $birthdate
+     */
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+
+
 }

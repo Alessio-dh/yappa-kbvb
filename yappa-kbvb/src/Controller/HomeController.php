@@ -13,6 +13,7 @@ use App\Entity\MemberEntry;
 use App\Entity\Members;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -81,7 +82,7 @@ class HomeController extends Controller
                 $session->set('checkForRedirecting', $memberEntry->getId());
                 return $this->redirectToRoute('keuze',array('id'=>$memberEntry->getId()));
             }else{
-                throw new \Exception('Not a member of the red devils fanclub');
+                $form->addError(new FormError('De combinatie is niet gevonden in ons systeem, Probeer opnieuw'));
             }
         }
 
