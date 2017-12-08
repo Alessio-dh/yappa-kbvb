@@ -144,7 +144,7 @@ class HomeController extends Controller
 
         return $this->render('Layouts/Main_Layout.html.twig',array(
             'form' => $form->createView(),
-            'templateName' => 'item_select'
+            'templateName' => 'item_select',
         ));
     }
 

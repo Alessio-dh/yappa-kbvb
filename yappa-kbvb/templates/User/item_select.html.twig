@@ -1,11 +1,20 @@
 
 <div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
     <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
-        <img class="img-responsive" src="{{ asset('/assets/img/gift-icon.png') }}" style="height:154px;width:159px;margin:auto;">
         <h3 class="name"><label>Kies uw geschenk </label></h3>
         <div class="row">
             {{ form_start(form) }}
             {% if form.item is defined %}
+                <div class="container" style="padding-bottom: 20px;">
+                    {% for item in form.item.vars.choices %}
+                        <div class="col-md-3" style="border: 1px solid grey;padding:0px;">
+                            <div style="border-bottom: 1px solid grey;width: 100%;">
+                                <h4>{{ item.data.description }}</h4>
+                            </div>
+                            <img class="img-responsive" src="{{ asset('/assets/img/items/') }}{{ item.data.imagelink }}" style="max-height: 200px;margin-left: auto;margin-right: auto;display: block;">
+                        </div>
+                    {% endfor %}
+                </div>
                 {{ form_widget(form.item) }}
             {% endif %}
         </div>
