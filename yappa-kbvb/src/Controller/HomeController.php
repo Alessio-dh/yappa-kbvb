@@ -72,6 +72,12 @@ class HomeController extends Controller
                 if($this->alreadyEntered($memberEntry->getMemberId(),$date)){
                     $form->addError(new FormError('Je hebt al een keuze gemaakt'));
                 }else{
+
+                    $idPreviousEnter = $this->enteredNoChoice($memberEntry->getMemberId(),$date);
+                    if($idPreviousEnter != null){
+                        $session->set('checkForRedirecting', $idPreviousEnter);
+                        return $this->redirectToRoute('keuze',array('id'=>$idPreviousEnter));
+                    }
                     $em = $this->getDoctrine()->getManager();
                     $dateEntered = new \DateTime();
 
@@ -175,6 +181,18 @@ class HomeController extends Controller
             return true;
         }else{
             return false;
+        }
+    }
+
+    private function enteredNoChoice($memberId,$birthDate){
+        $member =  $this->getDoctrine()
+            ->getRepository(MemberEntry::class)
+            ->findOneBy(array('member_id' => $memberId,'birthdate'=>$birthDate,'item'=>null));
+
+        if($member != null){
+            return $member->getId();
+        }else{
+            return null;
         }
     }
 
