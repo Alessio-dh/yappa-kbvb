@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yappa KBVB</title>
+    <link rel="stylesheet" href="{{ asset('/assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/styles.min.css') }}">
+</head>
+<body style="background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ),url('{{ asset('/assets/img/bg7.jpg') }}');background-repeat:no-repeat;background-size:cover;min-height:100vh;">
+<div class="container">
+    <div class="row">
+        <div class="article-list" style="background-color: transparent;min-height:120px;">
+            <div class="container">
+                <div class="intro" style="margin:0px;margin-right:0px;max-width:600px;">
+                    <img src="{{ asset('/assets/img/Belgium_urbsfa.png') }}" style="border-style:none;min-width:120px;display:inline-block;background-position:left;background-repeat:no-repeat;height:120px;z-index:99;">
+                    <h2 class="text-left" style="display:inline-block;font-size:20px;color:rgb(255,255,255);font-weight:bold;font-style:normal;">Koninklijke Belgische Voetbalbond</h2>
+                </div>
+                <div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
+                    <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
+                        <img class="img-responsive" src="{{ asset('/assets/img/error.png') }}" style="height:154px;width:159px;margin:auto;">
+                        <h3 class="name"><label>Oops!  {{ status_code }} {{ status_text }}</label></h3>
+                        <div class="row">
+                            <p>{{ exception.message }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+</html>
