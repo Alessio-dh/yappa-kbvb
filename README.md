@@ -18,3 +18,9 @@ Row : integer,date( Format : YYYY-mm-dd )
 Seperator : ,
 ```
 
+## Creating a dashboard user
+
+```
+php bin/console user:create <username> <password>
+```
+
