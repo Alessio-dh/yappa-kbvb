@@ -33,3 +33,10 @@ services:
         - "@doctrine.orm.entity_manager"
       tags:
         - {name: console.command}
+
+    console_command.user_create:
+          class: App\Command\UserCreate
+          arguments:
+            - "@doctrine.orm.entity_manager"
+          tags:
+            - {name: console.command}

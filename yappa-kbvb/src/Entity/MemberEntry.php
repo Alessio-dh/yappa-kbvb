@@ -27,7 +27,7 @@ class MemberEntry
     protected $id;
 
     /**
-     * @ORM\Column(name="item",type="integer")
+     * @ORM\Column(name="item",type="integer",nullable=true)
      */
     protected $item;
 

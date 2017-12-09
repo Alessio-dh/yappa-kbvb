@@ -57,6 +57,8 @@ class User implements AdvancedUserInterface
         return $this->password;
     }
 
+    public function setPassword($pass){$this->password = $pass;}
+    public function setUsername($username){$this->username = $username;}
     /**
      * @return bool
      */
