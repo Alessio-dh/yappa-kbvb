@@ -1,0 +1,42 @@
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fa fa-area-chart"></i> Entries over the past 30 days</div>
+    <div class="card-body">
+        {% if dataForChartEntries is defined %}
+            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                    </div>
+                </div>
+            </div>
+            <canvas id="entriesLastDays" width="914" height="274" class="chartjs-render-monitor" style="display: block; width: 914px; height: 274px;"></canvas>
+        {% else %}
+            <h3>Data did not came through please contact one of the yappanezen ! ;P</h3>
+        {% endif %}
+    </div>
+</div>
+
+{% if dataForChartEntries is defined %}
+    <script>
+        var default_colors = ['#3366CC','#DC3912','#FF9900','#109618','#990099','#3B3EAC','#0099C6','#DD4477','#66AA00','#B82E2E','#316395','#994499','#22AA99','#AAAA11','#6633CC','#E67300','#8B0707','#329262','#5574A6','#3B3EAC'];
+
+        new Chart(document.getElementById("entriesLastDays"), {
+            type: 'bar',
+            data: {
+                labels: [{% for x in dataForChartEntries.labels %}"{{ x }}",{% endfor %}],
+                datasets: [
+                    {
+                        backgroundColor: default_colors,
+                        data: [{% for x in dataForChartEntries.data %}{{ x }},{% endfor %}],
+                    }
+                ]
+            },
+            options: {
+                legend: { display: false },
+                title: {display: false}
+            }
+        });
+    </script>
+{% endif %}

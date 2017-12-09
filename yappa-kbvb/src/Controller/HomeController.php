@@ -28,7 +28,6 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $session = new Session();
-        $session->start();
         $memberEntry = new MemberEntry();
         $form = $this->createFormBuilder($memberEntry)
             ->add('day', IntegerType::class,array('label'=>'Dag',
