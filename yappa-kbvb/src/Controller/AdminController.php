@@ -8,20 +8,28 @@
 
 namespace App\Controller;
 
+use App\Entity\Items;
 use App\Entity\MemberEntry;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 class AdminController extends Controller
 {
+    private $succes;
     /**
      * @Route("/admin",name="admin")
      */
     public function index(){
-        $templatesNeeded = [];
         $templatesNeeded = array('Admin/Charts/users-not-selected-item.html.twig',
                                 'Admin/Charts/members-entered-last-days.html.twig');
         $totalEnters = $this->getAmountOfEnters();
@@ -39,6 +47,261 @@ class AdminController extends Controller
             'dataChartNotSelected' => $dataForChartNotSelected,
             'dataForChartEntries' => $dataForChartEntries
         ));
+    }
+
+    /**
+     * @Route("/admin/items/{success}", name="itemCRUD",defaults={"success" = null})
+     */
+    public function itemAdjustments(Request $request,$success){
+        $items = $this->getItems();
+
+        $formDelete = $this->createFormBuilder(null)
+            ->add('id', TextType::class, array(
+                'attr'=>array(
+                    'class'  => 'form-control idOfItem',
+                    'hidden'=>true
+                ),
+                'label'=>false,
+                'required' => true
+            ))
+            ->add('delete', SubmitType::class, array('label' => 'Delete','attr'=>array('class'=>'btn btn-danger')))
+            ->getForm();
+
+        $formAddNewItem= $this->createFormBuilder(null)
+            ->add('description', TextType::class, array(
+                'attr'=>array(
+                    'class'  => 'form-control',
+                    'placeholder' => "Fill in the description"
+                ),
+                'required' => true
+            ))
+            ->add('image', FileType::class, array(
+                'attr'=>array(
+                    'class'  => 'form-control'
+                ),
+                'multiple'=>false,
+                'required' => true
+            ))
+            ->add('active', CheckboxType::class, array(
+                'attr'=>array(
+                    'class'  => 'form-control',
+                    'checked' => true
+                ),
+                'required' => true
+            ))
+            ->add('add', SubmitType::class, array('label' => 'Add','attr'=>array('class'=>'btn btn-success form-control')))
+            ->getForm();
+
+        $formDelete->handleRequest($request);
+        $formAddNewItem->handleRequest($request);
+
+        if ($formDelete->isSubmitted() && $formDelete->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $data = $formDelete->getData();
+            $item = $this->getItem($data['id']);
+            $em->remove($item);
+            $em->flush();
+            $items = $this->getItems();
+        }
+
+        if ($formAddNewItem->isSubmitted() && $formAddNewItem->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $item = $formAddNewItem->getData();
+
+            $file = $item['image'];
+            $dateNow = new \DateTime();
+            $dateNow = $dateNow->format("YmdHis");
+            $newFileName = rand(1,9999).$dateNow.rand(1,9999).'.'.$file->guessExtension();
+
+            $file->move(
+                $this->getParameter('item_image_directory'),
+                $newFileName
+            );
+
+            $newItem = new Items();
+
+            $newItem->setDescription($item['description']);
+            $newItem->setImagelink($newFileName);
+            $newItem->setActive($item['active']);
+
+            $em->persist($newItem);
+            $em->flush();
+            $items = $this->getItems();
+        }
+
+        return $this->render('Layouts/admin_layout.html.twig',array(
+            'templateNames' => 'item-crud',
+            'items'=>$items,
+            'successMessage' => $success,
+            'formDelete'=>$formDelete->createView(),
+            'formAddNewItem'=>$formAddNewItem->createView()
+        ));
+    }
+
+    /**
+     * @Route("/admin/edit/item/{id}",name="editItem")
+     */
+    public function editItem(Request $request,$id = null){
+        if($id === null){
+            throw new NotFoundHttpException("The item was not found");
+        }else{
+            $this->succes = null;
+            $item = $this->getItem($id);
+
+            $form = $this->createFormBuilder(null)
+                ->add('description', TextType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control',
+                        'value' => $item->getDescription()
+                    ),
+                    'required' => false
+                ))
+                ->add('image', FileType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control'
+                    ),
+                    'multiple'=>false,
+                    'required' => false
+                ))
+                ->add('active', CheckboxType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control',
+                        'checked' => $item->getActive() == '1'? true : false,
+                    ),
+                    'required' => false
+                ))
+                ->add('save', SubmitType::class, array('label' => 'Save','attr'=>array('class'=>'btn btn-lg btn-success')))
+                ->getForm();
+
+            $formAddNewItem= $this->createFormBuilder(null)
+                ->add('description', TextType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control',
+                        'placeholder' => "Fill in the description"
+                    ),
+                    'required' => true
+                ))
+                ->add('image', FileType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control'
+                    ),
+                    'multiple'=>false,
+                    'required' => true
+                ))
+                ->add('active', CheckboxType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control',
+                        'checked' => true
+                    ),
+                    'required' => true
+                ))
+                ->add('add', SubmitType::class, array('label' => 'Add','attr'=>array('class'=>'btn btn-success form-control')))
+                ->getForm();
+
+            $formDelete = $this->createFormBuilder(null)
+                ->add('id', TextType::class, array(
+                    'attr'=>array(
+                        'class'  => 'form-control idOfItem',
+                        'hidden'=>true
+                    ),
+                    'label'=>false,
+                    'required' => true
+                ))
+                ->add('delete', SubmitType::class, array('label' => 'Delete','attr'=>array('class'=>'btn btn-danger')))
+                ->getForm();
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $itemChanged = $form->getData();
+                $em = $this->getDoctrine()->getManager();
+                try{
+                    if($itemChanged['image'] ===null){
+
+                        $item->setDescription($itemChanged['description']);
+                        $item->setImagelink($item->getImageLink());
+                        $item->setActive($itemChanged['active']);
+
+                        $em->persist($item);
+                        $em->flush();
+
+                    }else{
+                        $file = $itemChanged['image'];
+                        $dateNow = new \DateTime();
+                        $dateNow = $dateNow->format("YmdHis");
+                        $newFileName = rand(1,9999).$dateNow.rand(1,9999).'.'.$file->guessExtension();
+
+                        $file->move(
+                            $this->getParameter('item_image_directory'),
+                            $newFileName
+                        );
+
+                        // Can unlink old file here but not needed because we will not be working with that many items
+
+                        $item->setDescription($itemChanged['description']);
+                        $item->setImagelink($newFileName);
+                        $item->setActive($itemChanged['active']);
+
+                        $em->persist($item);
+                        $em->flush();
+                    }
+                    $items = $this->getItems();
+                    $successMessage = true;
+                }catch (Exception $ex){
+                    $successMessage = false;
+                }
+
+                return $this->redirectToRoute('itemCRUD',array('success' => $successMessage));
+            }
+
+            $formDelete->handleRequest($request);
+
+            if ($formDelete->isSubmitted() && $formDelete->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $data = $formDelete->getData();
+                $item = $this->getItem($data['id']);
+                $em->remove($item);
+                $em->flush();
+            }
+
+            $formAddNewItem->handleRequest($request);
+
+            if ($formAddNewItem->isSubmitted() && $formAddNewItem->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $item = $formAddNewItem->getData();
+
+                $file = $item['image'];
+                $dateNow = new \DateTime();
+                $dateNow = $dateNow->format("YmdHis");
+                $newFileName = rand(1,9999).$dateNow.rand(1,9999).'.'.$file->guessExtension();
+
+                $file->move(
+                    $this->getParameter('item_image_directory'),
+                    $newFileName
+                );
+
+                $newItem = new Items();
+
+                $newItem->setDescription($item['description']);
+                $newItem->setImagelink($newFileName);
+                $newItem->setActive($item['active']);
+
+                $em->persist($newItem);
+                $em->flush();
+                $items = $this->getItems();
+            }
+
+            $items = $this->getItems();
+
+            return $this->render('Layouts/admin_layout.html.twig',array(
+                'templateNames' => 'item-crud',
+                'items'=>$items,
+                'editItem'=>$id,
+                'form'=>$form->createView(),
+                'formDelete' => $formDelete->createView(),
+                'formAddNewItem'=>$formAddNewItem->createView()
+            ));
+        }
     }
 
     private function getNotSelectedItemUsers(){
@@ -98,5 +361,19 @@ class AdminController extends Controller
         }
 
         return array("labels"=>$labels,"data"=>$days);
+    }
+
+    private function getItems(){
+        $items =  $this->getDoctrine()->getManager()
+            ->getRepository(Items::class)
+            ->findAll();
+        return $items;
+    }
+
+    private function getItem($id){
+        $item =  $this->getDoctrine()->getManager()
+            ->getRepository(Items::class)
+            ->findOneBy(array('id'=>$id));
+        return $item;
     }
 }

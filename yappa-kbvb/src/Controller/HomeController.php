@@ -196,9 +196,9 @@ class HomeController extends Controller
     }
 
     private function getItemsToChoose(){
-        $items = $member =  $this->getDoctrine()
+        $items =  $this->getDoctrine()
             ->getRepository(Items::class)
-            ->findAll();
+            ->findBy(array('active'=>1));
         return $items;
     }
 }

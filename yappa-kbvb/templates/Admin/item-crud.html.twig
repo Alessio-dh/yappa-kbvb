@@ -1,0 +1,135 @@
+<style>
+    .table td{
+        vertical-align: middle;
+    }
+</style>
+
+{% if successMessage is defined %}
+    {% if successMessage != null %}
+        {% if successMessage %}
+            <div class="alert alert-success alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> The item has been updated !
+            </div>
+        {% else %}
+            <div class="alert alert-danger alert-dismissable fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Oops!</strong> Something has gone wrong while updating the item !
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+<button class="btn btn-primary" style="float: right;margin: 10px;" data-toggle="modal" data-target="#addNewItemModal">Add new item</button>
+<table class="table table-bordered text-center">
+    <thead style="font-weight:bold;">
+        <tr>
+            <td>Description</td>
+            <td>Image</td>
+            <td>Active?</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if items is defined %}
+        {% if items is iterable %}
+            {% for item in items %}
+                {% if editItem is defined %}
+                    {% if editItem == item.id %}
+                        {{ form_start(form) }}
+                        <tr>
+                            <td>{{ form_widget(form.description) }}</td>
+                            <td>
+                                <img src="{{ asset('assets/img/items/') }}{{ item.imagelink }}" height="100px" width="100px;">
+                                {{ form_widget(form.image) }}
+                            </td>
+                            <td>
+                                {{ form_widget(form.active) }}
+                            </td>
+                            <td>
+                                {{ form_widget(form.save) }}
+                                <a href="/admin/items" class="btn btn-lg btn-danger" style="color:white;">Cancel</a>
+                            </td>
+                        </tr>
+                        {{ form_end(form) }}
+                    {% else %}
+                        <tr>
+                            <td><p>{{ item.description }}</p></td>
+                            <td><img src="{{ asset('assets/img/items/') }}{{ item.imagelink }}" height="100px" width="100px;"></td>
+                            <td>
+                                <i class="{% if item.active %}fa fa-check-square-o{% else %}fa fa-times{% endif %}" aria-hidden="true"></i>
+                            </td>
+                            <td>
+                                <a href="/admin/edit/item/{{ item.id }}" class="btn btn-lg btn-info" style="color:white;"><i class="fa fa-pencil"></i><br>Edit</a>
+                                <a class="btn btn-lg btn-danger" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="deleteItem({{ item.id }},'{{ item.description }}')"><i class="fa fa-trash"></i><br>Delete</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% else %}
+                    <tr>
+                        <td><p>{{ item.description }}</p></td>
+                        <td><img src="{{ asset('assets/img/items/') }}{{ item.imagelink }}" height="100px" width="100px;"></td>
+                        <td>
+                            <i class="{% if item.active %}fa fa-check-square-o{% else %}fa fa-times{% endif %}" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <a href="/admin/edit/item/{{ item.id }}" class="btn btn-lg btn-info" style="color:white;"><i class="fa fa-pencil"></i><br>Edit</a>
+                            <a class="btn btn-lg btn-danger" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="deleteItem({{ item.id }},'{{ item.description }}')"><i class="fa fa-trash"></i><br>Delete</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p class="text-center">Could not get the data for the item please contact to closest yappanees! :D</p>
+    {% endif %}
+    </tbody>
+</table>
+
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "delete" below if you are sure you want to delete <br><p id="descriptionToDelete"></p></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                {{ form_start(formDelete) }}
+                {{ form_widget(formDelete.delete) }}
+                {{ form_end(formDelete) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addNewItemModal" tabindex="-1" role="dialog" aria-labelledby="addNewItemModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Creating new item</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Fill in all the fields. Once you are done you can press save and the item will be inserted as you configured. Make sure to <strong>ONLY UPLOAD IMAGE FILES</strong></div>
+            <div class="modal-footer">
+                {{ form_start(formAddNewItem) }}
+                {{ form_widget(formAddNewItem) }}
+                {{ form_widget(formAddNewItem.add) }}
+                <button class="btn btn-danger form-control" type="button" data-dismiss="modal">Cancel</button>
+                {{ form_end(formAddNewItem) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteItem(itemId,description){
+        $("#descriptionToDelete").text(description);
+        $(".idOfItem").val(itemId);
+    }
+</script>

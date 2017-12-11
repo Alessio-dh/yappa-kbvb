@@ -25,18 +25,19 @@ class Items
     protected $id;
 
     /**
-     * @var integer $description
-     *
      * @ORM\Column(name="description", type="text")
      */
     protected $description;
 
     /**
-     * @var integer $image_link
-     *
      * @ORM\Column(name="image_link", type="text")
      */
     protected $image_link;
+
+    /**
+     * @ORM\Column(name="active", type="boolean")
+     */
+    protected $active;
 
     /**
      * @return int
@@ -54,6 +55,11 @@ class Items
         return $this->description;
     }
 
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
     /**
      * @return int
      */
@@ -62,7 +68,26 @@ class Items
         return $this->image_link;
     }
 
+    public function setImageLink($imageLink)
+    {
+        $this->image_link = $imageLink;
+    }
+
     public function __toString() {
         return (string)$this->description;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    public function setActive($active){
+        $this->active = $active;
+    }
+
+
 }
