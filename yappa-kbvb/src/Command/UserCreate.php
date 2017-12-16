@@ -9,26 +9,25 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserCreate extends Command
 {
     private $em;
-    private $passwordEncoder;
+    private $userService;
 
-    public function __construct(EntityManagerInterface $em,UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $em,UserService $userService)
     {
         parent::__construct();
 
         $this->em = $em;
-        $this->passwordEncoder = $passwordEncoder;
-
+        $this->userService = $userService;
     }
 
     protected function configure()
@@ -50,28 +49,11 @@ class UserCreate extends Command
         $username = $input->getArgument('username');
         $passwordPlain = $input->getArgument('password');
 
-        if($this->isAlreadyIn($username)){
+        if(!$this->userService->addUser($username,$passwordPlain)){
             $io->error('A user with this username already exists');
             exit;
-        }else{
-            $user=new User();
-            $password = $this->passwordEncoder->encodePassword($user, $passwordPlain);
-            $user->setUsername($username);
-            $user->setPassword($password);
-            $this->em->persist($user);
-            $this->em->flush();
         }
 
         $io->success('User is created with username '.$username.' !');
-    }
-
-    private function isAlreadyIn($username){
-        $user = $this->em->getRepository(User::class)->findOneBy(array('username'=>$username));
-
-        if($user == null){
-            return false;
-        }else{
-            return true;
-        }
     }
 }

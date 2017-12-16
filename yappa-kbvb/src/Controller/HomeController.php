@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Entity\Items;
 use App\Entity\MemberEntry;
 use App\Entity\Members;
+use App\Service\ItemService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormError;
@@ -104,7 +105,7 @@ class HomeController extends Controller
     /**
      * @Route("/keuze/{id}",name="keuze")
      */
-    public function itemSelect(Request $request,$id = null){
+    public function itemSelect(Request $request,ItemService $itemService,$id = null){
         $session = new Session();
         if($id == null){
             return $this->redirectToRoute('home');
@@ -116,12 +117,10 @@ class HomeController extends Controller
             return $this->redirectToRoute('home');
         }
 
-        $items = $this->getItemsToChoose();
-
         $form = $this->createFormBuilder(null)
             ->add('item', EntityType::class, array(
                 'class'  => Items::class,
-                'choices' =>$items
+                'choices' =>$itemService->getActiveItems()
             ))
             ->add('save', SubmitType::class, array('label' => 'Verzenden','attr'=>array('class'=>'pulseBtn')))
             ->getForm();
@@ -193,12 +192,5 @@ class HomeController extends Controller
         }else{
             return null;
         }
-    }
-
-    private function getItemsToChoose(){
-        $items =  $this->getDoctrine()
-            ->getRepository(Items::class)
-            ->findBy(array('active'=>1));
-        return $items;
     }
 }

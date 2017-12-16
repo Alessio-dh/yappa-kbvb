@@ -38,10 +38,11 @@
                     {% if editItem == item.id %}
                         {{ form_start(form) }}
                         <tr>
-                            <td>{{ form_widget(form.description) }}</td>
+                            <td>
+                                {{ form_widget(form.description) }}</td>
                             <td>
                                 <img src="{{ asset('assets/img/items/') }}{{ item.imagelink }}" height="100px" width="100px;">
-                                {{ form_widget(form.image) }}
+                                {{ form_widget(form.imagelink) }}
                             </td>
                             <td>
                                 {{ form_widget(form.active) }}
@@ -119,7 +120,7 @@
             <div class="modal-footer">
                 {{ form_start(formAddNewItem) }}
                 {{ form_widget(formAddNewItem) }}
-                {{ form_widget(formAddNewItem.add) }}
+                {{ form_widget(formAddNewItem.save) }}
                 <button class="btn btn-danger form-control" type="button" data-dismiss="modal">Cancel</button>
                 {{ form_end(formAddNewItem) }}
             </div>
