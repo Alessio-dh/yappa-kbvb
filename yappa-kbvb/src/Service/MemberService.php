@@ -28,4 +28,13 @@ class MemberService
         if($member != null ){return true;}
         return false;
     }
+
+    public function addMember($id,$birthdate){
+        $member = new Members();
+        $member->setIdMembership($id);
+        $member->setBirthdate(new \DateTime($birthdate." 00:00:00"));
+
+        $this->em->persist($member);
+        $this->em->flush();
+    }
 }

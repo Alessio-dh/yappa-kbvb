@@ -9,6 +9,7 @@
 namespace App\Command;
 
 use App\Entity\Members;
+use App\Service\MemberService;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
 use Symfony\Component\Console\Command\Command;
@@ -21,12 +22,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class CsvImport extends Command
 {
     private $em;
+    private $memberService;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em,MemberService $memberService)
     {
         parent::__construct();
 
         $this->em = $em;
+        $this->memberService = $memberService;
     }
 
     protected function configure()
@@ -62,14 +65,9 @@ class CsvImport extends Command
 
         $io->progressStart(iterator_count($reader));
         foreach ($reader as $row){
-            $member = new Members();
-            $member->setIdMembership($row['id_membership']);
-            $member->setBirthdate(new \DateTime($row['birthdate']." 00:00:00"));
-
-            $this->em->persist($member);
+            $this->memberService->addMember($row['id_membership'],$row['birthdate']);
             $io->progressAdvance();
         }
-        $this->em->flush();
         $io->progressFinish();
         $io->success('Members are imported!');
     }
