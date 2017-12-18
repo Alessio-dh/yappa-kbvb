@@ -1,33 +1,36 @@
+{% extends 'Layouts/Main_Layout.html.twig' %}
 
-<div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
-    <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
-        <h3 class="name"><label>Kies uw geschenk </label></h3>
-        <div class="row">
-            {{ form_start(form) }}
-            {% if form.item is defined %}
-                <div class="container" style="padding-bottom: 20px;">
-                    {% for item in form.item.vars.choices %}
-                        <div class="col-md-3" style="border: 1px solid grey;padding:0px;">
-                            <div style="border-bottom: 1px solid grey;width: 100%;">
-                                <h4>{{ item.data.description }}</h4>
+{% block body %}
+    <div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
+        <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
+            <h3 class="name"><label>Kies uw geschenk </label></h3>
+            <div class="row">
+                {{ form_start(form) }}
+                {% if form.item is defined %}
+                    <div class="container" style="padding-bottom: 20px;">
+                        {% for item in form.item.vars.choices %}
+                            <div class="col-md-3" style="border: 1px solid grey;padding:0px;">
+                                <div style="border-bottom: 1px solid grey;width: 100%;">
+                                    <h4>{{ item.data.description }}</h4>
+                                </div>
+                                <img class="img-responsive" src="{{ asset('/assets/img/items/') }}{{ item.data.imagelink }}" style="max-height: 200px;margin-left: auto;margin-right: auto;display: block;">
                             </div>
-                            <img class="img-responsive" src="{{ asset('/assets/img/items/') }}{{ item.data.imagelink }}" style="max-height: 200px;margin-left: auto;margin-right: auto;display: block;">
-                        </div>
-                    {% endfor %}
-                </div>
-                {{ form_widget(form.item) }}
-            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {{ form_widget(form.item) }}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12" style="padding-right:0px;">
-        <div>
-            {% if form.save is defined %}
-                {{ form_widget(form.save) }}
-            {% endif %}
+    <div class="row">
+        <div class="col-md-12" style="padding-right:0px;">
+            <div>
+                {% if form.save is defined %}
+                    {{ form_widget(form.save) }}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 
-{{ form_end(form) }}
+    {{ form_end(form) }}
+{% endblock %}

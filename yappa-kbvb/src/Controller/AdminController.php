@@ -28,11 +28,7 @@ class AdminController extends Controller
      * @Route("/admin",name="admin")
      */
     public function index(ChartData $chartData){
-        $templatesNeeded = array('Admin/Charts/users-not-selected-item.html.twig',
-                                'Admin/Charts/members-entered-last-days.html.twig');
-
-        return $this->render('Layouts/admin_layout.html.twig',array(
-            'templateNames' => $templatesNeeded,
+        return $this->render('Admin/Charts/users-not-selected-item.html.twig',array(
             'dataChartNotSelected' => $chartData->getAmountEnteredVSnotEntered(),
             'dataForChartEntries' => $chartData->getDailyEntriesLastDays(30)
         ));
@@ -61,8 +57,7 @@ class AdminController extends Controller
 
         $items = $itemService->getItems();
 
-        return $this->render('Layouts/admin_layout.html.twig',array(
-            'templateNames' => 'item-crud',
+        return $this->render('Admin/item-crud.html.twig',array(
             'items'=>$items,
             'successMessage' => $success,
             'formDelete'=>$formDelete->createView(),
@@ -109,8 +104,7 @@ class AdminController extends Controller
 
             $items = $itemService->getItems();
 
-            return $this->render('Layouts/admin_layout.html.twig',array(
-                'templateNames' => 'item-crud',
+            return $this->render('Admin/item-crud.html.twig',array(
                 'items'=>$items,
                 'editItem'=>$id,
                 'form'=>$form->createView(),

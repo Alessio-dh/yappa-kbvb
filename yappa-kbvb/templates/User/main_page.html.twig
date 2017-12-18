@@ -1,53 +1,57 @@
-{{ form_start(form) }}
-<div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
-    <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;height:360px;min-height:360px;">
-        <a href="#"></a>
-        <h3 class="text-left name">Welkom </h3>
-        <p class="description">Als lid van 1895 krijg je een mooi geschenk. Je hebt de keuze tussen vershillende artikels die na het invullen van volgende gegevens te zien zijn. Vul je geboortedatum in samen met je lidnummer . Hierna maak je de keuze en het mysterieuze
-            cadeautje komt jou kant op!</p> <br>
-        <div class="alert-danger">
-            {{ form_errors(form) }}
-        </div>
-    </div>
+{% extends 'Layouts/Main_Layout.html.twig' %}
 
-    <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;min-height:360px;">
-        <img class="img-responsive" src="{{ asset('/assets/img/calendar-512.png') }}" style="height:154px;width:159px;margin:auto;">
-        <h3 class="name"><label>Geboortedatum </label></h3>
-        <div class="row">
-            <div class="col-md-4">
-                {% if form.day is defined %}
-                    {{ form_widget(form.day) }}
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                {% if form.month is defined %}
-                    {{ form_widget(form.month) }}
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                {% if form.year is defined %}
-                    {{ form_widget(form.year) }}
-                {% endif %}
+{% block body %}
+    {{ form_start(form) }}
+    <div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
+        <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;height:360px;min-height:360px;">
+            <a href="#"></a>
+            <h3 class="text-left name">Welkom </h3>
+            <p class="description">Als lid van 1895 krijg je een mooi geschenk. Je hebt de keuze tussen vershillende artikels die na het invullen van volgende gegevens te zien zijn. Vul je geboortedatum in samen met je lidnummer . Hierna maak je de keuze en het mysterieuze
+                cadeautje komt jou kant op!</p> <br>
+            <div class="alert-danger">
+                {{ form_errors(form) }}
             </div>
         </div>
 
-    </div>
-    <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;min-height:360px;">
-        <a href="#"></a><img class="img-responsive" src="{{ asset('/assets/img/jersey.jpg') }}" style="height:154px;width:159px;margin:auto;">
-        {% if form.member_id is defined %}
-            <h3 class="name">{{ form_label(form.member_id) }} </h3>
-            {{ form_widget(form.member_id) }}
-        {% endif %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12" style="padding-right:0px;">
-        <div>
-            {% if form.save is defined %}
-                {{ form_widget(form.save) }}
+        <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;min-height:360px;">
+            <img class="img-responsive" src="{{ asset('/assets/img/calendar-512.png') }}" style="height:154px;width:159px;margin:auto;">
+            <h3 class="name"><label>Geboortedatum </label></h3>
+            <div class="row">
+                <div class="col-md-4">
+                    {% if form.day is defined %}
+                        {{ form_widget(form.day) }}
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if form.month is defined %}
+                        {{ form_widget(form.month) }}
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if form.year is defined %}
+                        {{ form_widget(form.year) }}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4 col-sm-6 item" style="background-color:#ffffff;min-height:360px;">
+            <a href="#"></a><img class="img-responsive" src="{{ asset('/assets/img/jersey.jpg') }}" style="height:154px;width:159px;margin:auto;">
+            {% if form.member_id is defined %}
+                <h3 class="name">{{ form_label(form.member_id) }} </h3>
+                {{ form_widget(form.member_id) }}
             {% endif %}
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-12" style="padding-right:0px;">
+            <div>
+                {% if form.save is defined %}
+                    {{ form_widget(form.save) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-{{ form_end(form) }}
+    {{ form_end(form) }}
+{% endblock %}

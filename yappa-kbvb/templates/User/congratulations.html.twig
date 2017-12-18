@@ -1,11 +1,14 @@
+{% extends 'Layouts/Main_Layout.html.twig' %}
 
-<div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
-    <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
-        <img class="img-responsive" src="{{ asset('/assets/img/trophy.png') }}" style="height:154px;width:159px;margin:auto;">
-        <h3 class="name"><label>Proficiat !</label></h3>
-        <div class="row">
-            <p>We hebben je keuze goed ontvangen! Van zodra je artikel beschikbaar is zullen wij jouw supportersclub hiervan op de hoogte brengen.</p>
-            <p>Voor vragen kan je altijd terecht bij <a href="mailto:1895@football.com">1895@football.com</a> </p>
+{% block body %}
+    <div class="row articles" style="padding-bottom:0px;padding-top: 20px;">
+        <div class="col-md-12 col-sm-12 item" style="background-color:#ffffff;min-height:360px;">
+            <img class="img-responsive" src="{{ asset('/assets/img/trophy.png') }}" style="height:154px;width:159px;margin:auto;">
+            <h3 class="name"><label>Proficiat !</label></h3>
+            <div class="row">
+                <p>We hebben je keuze goed ontvangen! Van zodra je artikel beschikbaar is zullen wij jouw supportersclub hiervan op de hoogte brengen.</p>
+                <p>Voor vragen kan je altijd terecht bij <a href="mailto:1895@football.com">1895@football.com</a> </p>
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}

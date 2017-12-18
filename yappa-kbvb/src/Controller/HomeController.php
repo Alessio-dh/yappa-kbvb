@@ -58,9 +58,8 @@ class HomeController extends Controller
             }
         }
 
-        return $this->render('Layouts/Main_Layout.html.twig',array(
+        return $this->render('User/main_page.html.twig',array(
             'form' => $form->createView(),
-            'templateName' => 'main_page'
         ));
     }
 
@@ -92,9 +91,8 @@ class HomeController extends Controller
             }
         }
 
-        return $this->render('Layouts/Main_Layout.html.twig',array(
+        return $this->render('User/item_select.html.twig',array(
             'form' => $form->createView(),
-            'templateName' => 'item_select',
         ));
     }
 
@@ -106,7 +104,7 @@ class HomeController extends Controller
         if($session->get('stepsDone') === 2){
             $session->remove('stepsDone');
             $session->remove('checkForRedirecting');
-            return $this->render('Layouts/Main_Layout.html.twig',array('templateName'=>'congratulations'));
+            return $this->render('User/congratulations.html.twig');
         }
 
         return $this->redirectToRoute('home');

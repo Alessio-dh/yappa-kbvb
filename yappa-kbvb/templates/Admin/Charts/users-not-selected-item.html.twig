@@ -1,3 +1,6 @@
+{% extends 'Admin/Charts/members-entered-last-days.html.twig' %}
+
+{% block chart_not_selected %}
 <div class="card mb-3">
     <div class="card-header">
         <i class="fa fa-area-chart"></i> Users that have not selected an item but entered</div>
@@ -17,31 +20,35 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
 
-{% if dataChartNotSelected is defined %}
-<script>
-    var canvas = document.getElementById("notSelectedItemUsers");
-    var ctx = canvas.getContext('2d');
+{% block scripts2 %}
+    {{ parent() }}
+    {% if dataChartNotSelected is defined %}
+    <script>
+        var canvas = document.getElementById("notSelectedItemUsers");
+        var ctx = canvas.getContext('2d');
 
-    var data = {
-        labels: [
-            {% for x in dataChartNotSelected.labels %}
-            "{{ x }}",
-            {% endfor %}
-         ],
-        datasets: [
-            {
-                data: [{% for x in dataChartNotSelected.data %}{{ x }},{% endfor %}],
-                backgroundColor: [
-                    'blue',
-                    'red'],
-            }
-        ]
-    };
+        var data = {
+            labels: [
+                {% for x in dataChartNotSelected.labels %}
+                "{{ x }}",
+                {% endfor %}
+             ],
+            datasets: [
+                {
+                    data: [{% for x in dataChartNotSelected.data %}{{ x }},{% endfor %}],
+                    backgroundColor: [
+                        'blue',
+                        'red'],
+                }
+            ]
+        };
 
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-    });
-</script>
-{% endif %}
+        var myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+        });
+    </script>
+    {% endif %}
+{% endblock %}

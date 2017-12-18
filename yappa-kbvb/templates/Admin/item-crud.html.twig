@@ -1,3 +1,6 @@
+{% extends 'Layouts/admin_layout.html.twig' %}
+
+{%  block item_crud %}
 <style>
     .table td{
         vertical-align: middle;
@@ -127,10 +130,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+{{ parent() }}
 <script>
     function deleteItem(itemId,description){
         $("#descriptionToDelete").text(description);
         $(".idOfItem").val(itemId);
     }
 </script>
+{% endblock %}
